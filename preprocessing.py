@@ -3,11 +3,8 @@ from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 import numpy
-# Load dataset
 url = "C:/Users/Asus/Desktop/Suven/practise_DS/adult.csv"
 df = pandas.read_csv(url)
-
-# filling missing values
 
 col_names = df.columns
 for c in col_names:
@@ -15,18 +12,18 @@ for c in col_names:
 
 df = df.apply(lambda x:x.fillna(x.value_counts().index[0]))
 
-#discretisation
+
 df.replace(['Divorced', 'Married-AF-spouse', 
               'Married-civ-spouse', 'Married-spouse-absent', 
               'Never-married','Separated','Widowed'],
              ['divorced','married','married','married',
               'not married','not married','not married'], inplace = True)
 
-#label Encoder
+
 category_col =['workclass', 'race', 'education','marital-status', 'occupation','relationship', 'gender', 'native-country', 'income'] 
 labelEncoder = preprocessing.LabelEncoder()
 
-# creating a map of all the numerical values of each categorical labels.
+
 mapping_dict={}
 for col in category_col:
     df[col] = labelEncoder.fit_transform(df[col])
@@ -34,7 +31,7 @@ for col in category_col:
     mapping_dict[col]=le_name_mapping
 print(mapping_dict)
 
-#droping redundant columns
+
 df=df.drop(['fnlwgt','educational-num'], axis=1)
 
 
@@ -48,8 +45,6 @@ y_pred_gini = dt_clf_gini.predict(X_test)
 
 print ("Desicion Tree using Gini Index\nAccuracy is ", accuracy_score(y_test,y_pred_gini)*100 )
 
-#creating and training a model
-#serializing our model to a file called model.pkl
 import pickle
 pickle.dump(dt_clf_gini, open("model.pkl","wb"))
 
